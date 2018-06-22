@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="python-travis-test",
-    version="0.0.1",
+    version="0.0.2",
     author="davidlj95 && ccebrecos",
     author_email="ccebrecos@davidlj95.com",
     description="Tests PyPi deployments with Travis",
