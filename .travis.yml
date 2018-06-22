@@ -4,21 +4,22 @@ python:
   - '3.6'
 stages:
   - test
+  - style checks
   - name: deploy
     if: branch = master AND tag IS present
-env:
-  - TEST_SUITE=tests
-  - TEST_SUITE=style
-install:
-  - pip install -r requirements.txt
-script:
-  - "./.travis/run.sh"
+env: TEST_SUITE=tests
+script: "./.travis/run.sh"
 notifications:
   webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
   slack:
     secure: opIk9MXCG8RN+SlKLv+rS3SbEO/RaVLSJnZj2BTgX+PRpNuFzwDJc8lWWPC5GASJWLEFmOocZ4SU2wHi61YkyQqUQTS+R2//XWTNoGWazu6fzjBxfU8ZtSBjDAzvrC6Wgx4h0J77/pJ3upw3WCkkmthiE5vKCZfnFJuciWOfbG590J385MxtKW7aC5DziHuF3gw4bl/4rR0GLD0+RoZZibdgthgLedEFRoc9UWwAGJOQ27mRrDwjPZ8CuYE0dUyu+3cYQEPni7bAkJImTAPLf/y7gytu/qaxqNYvUt5iZf3Gf56hvb5dNzEuTK9o44suvHsVb9Nw+fOfihbhpVI5kKopWGNTFmQK0xrlsMCm6wHv0rAhhbR8aldzfDycrbs5NW4vTktrasuOdeTP4WbMo9cehUZHQTuwoWqZHmhlNOsWZsQ7MBINBUVg0X37By3WNddEDqIrZ8RhT3pFHjPQaXuLIuoNS910zMeOusWxRbLW/rpMXwg1wd+V7Ii0Rz3QkWIsjaNC7ynmSFzEW/a7g/G9fvmnYQ/+oV3h8Io9EJTo1kLR2867FcGnZUivjrDWrS3VQcsZL9dC5R57ePbseRCRd98EtZ8G2gESKu3o6h/qhHiwaVeJrAFUzktVRLhxx0pW0OfgXa2+ie0CJRgD1NVC4kf7n+pS+7ErucG2PBI=
 jobs:
   include:
+    - stage: style checks
+      python: '3.6'
+      install: pip install flake8
+      env: TEST_SUITE=style
+      script: "./.travis/run.sh"
     - stage: deploy
       script: skip
       python: '3.6'
