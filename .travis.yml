@@ -2,9 +2,6 @@ language: python
 python:
 - '3.5'
 - '3.6'
-env:
-- TEST_SUITE=tests
-- TEST_SUITE=style
 install:
 - pip install -r requirements.txt
 script:
@@ -13,14 +10,20 @@ notifications:
   webhooks: https://fathomless-fjord-24024.herokuapp.com/notify
   slack:
     secure: opIk9MXCG8RN+SlKLv+rS3SbEO/RaVLSJnZj2BTgX+PRpNuFzwDJc8lWWPC5GASJWLEFmOocZ4SU2wHi61YkyQqUQTS+R2//XWTNoGWazu6fzjBxfU8ZtSBjDAzvrC6Wgx4h0J77/pJ3upw3WCkkmthiE5vKCZfnFJuciWOfbG590J385MxtKW7aC5DziHuF3gw4bl/4rR0GLD0+RoZZibdgthgLedEFRoc9UWwAGJOQ27mRrDwjPZ8CuYE0dUyu+3cYQEPni7bAkJImTAPLf/y7gytu/qaxqNYvUt5iZf3Gf56hvb5dNzEuTK9o44suvHsVb9Nw+fOfihbhpVI5kKopWGNTFmQK0xrlsMCm6wHv0rAhhbR8aldzfDycrbs5NW4vTktrasuOdeTP4WbMo9cehUZHQTuwoWqZHmhlNOsWZsQ7MBINBUVg0X37By3WNddEDqIrZ8RhT3pFHjPQaXuLIuoNS910zMeOusWxRbLW/rpMXwg1wd+V7Ii0Rz3QkWIsjaNC7ynmSFzEW/a7g/G9fvmnYQ/+oV3h8Io9EJTo1kLR2867FcGnZUivjrDWrS3VQcsZL9dC5R57ePbseRCRd98EtZ8G2gESKu3o6h/qhHiwaVeJrAFUzktVRLhxx0pW0OfgXa2+ie0CJRgD1NVC4kf7n+pS+7ErucG2PBI=
-deploy:
-  provider: pypi
-  user: "python_travis_test"
-  password:
-    secure: 3bIKRd8qfuzgtozOBu9OJ6eqxqx132rq9ToBynIbSp1lAAhgbQQeHqU2rO1GSvXG8ouMJewmzlw3FNJqKNHro3uv0Fi48LGsVuzto9/UUyPyGnvEVkbuyqN/zySHqmEde/ETWJ1P23nfNSUu3R6QYgrxrSmDR8VHahqNEvTMABRSy1bUAk/x+3s0IakhtQRnlwzhlMTwM3/hK+O9ZRodesGuFkxSNDuE1AFJ2gYQ74q6ZL2NwchI6Pr52fyP3dJWTWjGMGPwcquHXxi1zVWXNeonhYs5ACb6NelLQ2alWpHlIIFETn+7JjqZYjMfrym5ZJF+ReL9pQSCdQiWZKo6msXOUw+0hDUdmvv8QJZihT30UR1t21g4XJnatl7LhVVweKAi/sN5BVw8iyHz3kDsx14hUT/ribd5O0Mej0s9Kr1eB8m/QR+9EW26Wa/0vEqxxFDlkMYCrG1EMD590XOXUrTbu9HB+hiZf3QhFPYStmWrbrOa609cErc1/V8V4F5/bSdoDaZOoK0Ed0YDTHUoNljverccmeGxVom7nJF2iDhFlGkpCFQL4OvlxlMra8Vdb8mD/8oIBUvQGIHbJSZGziGWVVfoB0WDGwGnJZlxIbFxsfDFMuK6Fl+oo8Z/bt1RtgqociyAnuBb34zhnJH0z0H/rSeTlnjjD1HT5zqF9gE=
-  server: https://test.pypi.org/legacy/
-  on:
-    branch: master
-    tags: true
-    python: '3.6'
-    skip_existing: true
+jobs:
+  include:
+    - stage: Unit tests
+      env: TEST_SUITE=tests
+    - stage: Style tests
+      env: TEST_SUITE=style
+    - stage: Deployment
+      on:
+        branch: master
+        tags: true
+      python: '3.6'
+      deploy:
+        provider: pypi
+        user: "python_travis_test"
+        password:
+          secure: 3bIKRd8qfuzgtozOBu9OJ6eqxqx132rq9ToBynIbSp1lAAhgbQQeHqU2rO1GSvXG8ouMJewmzlw3FNJqKNHro3uv0Fi48LGsVuzto9/UUyPyGnvEVkbuyqN/zySHqmEde/ETWJ1P23nfNSUu3R6QYgrxrSmDR8VHahqNEvTMABRSy1bUAk/x+3s0IakhtQRnlwzhlMTwM3/hK+O9ZRodesGuFkxSNDuE1AFJ2gYQ74q6ZL2NwchI6Pr52fyP3dJWTWjGMGPwcquHXxi1zVWXNeonhYs5ACb6NelLQ2alWpHlIIFETn+7JjqZYjMfrym5ZJF+ReL9pQSCdQiWZKo6msXOUw+0hDUdmvv8QJZihT30UR1t21g4XJnatl7LhVVweKAi/sN5BVw8iyHz3kDsx14hUT/ribd5O0Mej0s9Kr1eB8m/QR+9EW26Wa/0vEqxxFDlkMYCrG1EMD590XOXUrTbu9HB+hiZf3QhFPYStmWrbrOa609cErc1/V8V4F5/bSdoDaZOoK0Ed0YDTHUoNljverccmeGxVom7nJF2iDhFlGkpCFQL4OvlxlMra8Vdb8mD/8oIBUvQGIHbJSZGziGWVVfoB0WDGwGnJZlxIbFxsfDFMuK6Fl+oo8Z/bt1RtgqociyAnuBb34zhnJH0z0H/rSeTlnjjD1HT5zqF9gE=
+        server: https://test.pypi.org/legacy/
